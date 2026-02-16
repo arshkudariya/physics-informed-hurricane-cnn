@@ -206,7 +206,7 @@ def main():
     last_save, last_wind_update = 0.0, 0.0
     wind_update_interval = 6.0 * 3600.0
 
-    # NEW: Save interval for static field snapshots
+    # Save interval for static field snapshots
     static_save_interval = max(3600.0, total_hours * 3600.0 / 1)  # Every hour or 10 snapshots
     last_static_save = 0.0
 
@@ -296,11 +296,7 @@ def main():
             print(f"\n  Saving snapshot at t={sim_time / 3600:.1f}h...")
             lon_grid, lat_grid = engine.get_lonlat_grid()
 
-            # This automatically creates 4 files:
-            # 1. hurricane_frame_XXh.png (comprehensive 6-panel)
-            # 2. track_verification.png (once - shows your #1 ranking)
-            # 3. streamfunction_jfm.png (3-panel journal style)
-            # 4. streamfunction_minimal.png (clean single panel)
+
             plot_static_field(
                 lat_grid, lon_grid, speed_field,
                 filename=f"hurricane_frame_{sim_time / 3600:.0f}h.png",
@@ -350,9 +346,7 @@ def main():
     print(f"Peak intensity: {max(intensity_history):.1f} m/s")
     print(f"Final max vorticity: {monitor.max_vorticity[-1]:.6f} 1/s")
 
-    # ========================================================================
-    # NEW: CREATE FINAL COMPREHENSIVE VISUALIZATION
-    # ========================================================================
+   
 
 
     lon_grid, lat_grid = engine.get_lonlat_grid()

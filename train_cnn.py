@@ -116,7 +116,7 @@ class HurricaneDataset(Dataset):
                     (future['vmax_ms'] - current['vmax_ms']) / 20.0
                 ]
 
-                # Check for NaN
+
                 if any(np.isnan(features)) or any(np.isnan(target)):
                     continue
 

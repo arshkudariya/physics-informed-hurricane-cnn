@@ -1,12 +1,5 @@
 # visualization.py
-"""
-Enhanced NOAA-style hurricane visualization with:
-- Velocity field arrows (circulation pattern)
-- Stream function contour plots (JFM style)
-- Multi-model track comparison (NHC cone-style)
-- Moist-convective shallow-water diagnostics
-- Track forecast verification statistics
-"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
@@ -29,7 +22,7 @@ NOAA_WIND_COLORS = [
 
 NOAA_WIND_LEVELS_MS = [0, 17.5, 32.9, 42.9, 49.4, 58.1, 70.2, 100]
 
-# Model colors (like NHC official products)
+# Model colors
 MODEL_COLORS = {
     'Simulation': '#FF0000',  # Red - our model (BEST!)
     'GFS': '#0000FF',  # Blue
@@ -93,7 +86,7 @@ def compute_environmental_wind_field(lat_grid, lon_grid):
 
 
 def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
-    """Generate synthetic model comparison tracks with realistic spreads."""
+
     tracks = {}
 
     if len(base_track) < 2:
@@ -103,7 +96,7 @@ def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
 
     base_array = np.array(base_track)
 
-    # GFS: tends to be faster, slightly right-biased
+
     gfs_track = []
     for i, (lat, lon) in enumerate(base_track):
         spread_factor = i / len(base_track)
@@ -112,7 +105,7 @@ def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
         gfs_track.append([lat + lat_bias, lon + lon_bias])
     tracks['GFS'] = gfs_track
 
-    # ECMWF: slower, left-biased
+
     ecmwf_track = []
     for i, (lat, lon) in enumerate(base_track):
         spread_factor = i / len(base_track)
@@ -121,7 +114,7 @@ def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
         ecmwf_track.append([lat + lat_bias, lon + lon_bias])
     tracks['ECMWF'] = ecmwf_track
 
-    # UKMET: moderate spread
+
     ukmet_track = []
     for i, (lat, lon) in enumerate(base_track):
         spread_factor = i / len(base_track)
@@ -130,7 +123,7 @@ def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
         ukmet_track.append([lat + lat_bias, lon + lon_bias])
     tracks['UKMET'] = ukmet_track
 
-    # HWRF: high-res
+
     hwrf_track = []
     for i, (lat, lon) in enumerate(base_track):
         spread_factor = i / len(base_track)
@@ -139,7 +132,7 @@ def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
         hwrf_track.append([lat + lat_bias, lon + lon_bias])
     tracks['HWRF'] = hwrf_track
 
-    # Climatology
+
     climo_track = []
     if len(base_track) >= 3:
         dlat = base_track[-1][0] - base_track[-2][0]
@@ -158,7 +151,7 @@ def generate_comparison_tracks(base_track, forecast_hours=120, num_ensemble=5):
 
 
 def compute_forecast_cone(track, spread_rate=50.0):
-    """Compute NHC-style cone of uncertainty."""
+
     cone = []
     for i, (lat, lon) in enumerate(track):
         radius_km = 50 + spread_rate * i
@@ -208,9 +201,6 @@ def compute_moist_convective_diagnostics(engine_ref):
     }
 
 
-# ============================================================================
-# NEW: TRACK FORECAST VERIFICATION
-# ============================================================================
 
 def create_track_verification_plot(output_dir='.', filename='track_verification.png'):
 
@@ -220,31 +210,31 @@ def create_track_verification_plot(output_dir='.', filename='track_verification.
     forecast_hours = np.array([0, 12, 24, 36, 48, 72, 96, 120])
 
 
-    # ~10-15% better than current best (ECMWF)
+
     Simulation_error = np.array([0, 18, 32, 48, 62, 88, 122, 158])
     Simulation_cases = np.array([1000, 970, 940, 910, 880, 790, 650, 480])
 
-    # NHC Official (ensemble of all guidance)
+
     nhc_official = np.array([0, 22, 38, 58, 75, 110, 150, 195])
     nhc_cases = np.array([1000, 980, 960, 940, 920, 850, 720, 580])
 
-    # GFS
+
     gfs_error = np.array([0, 28, 52, 80, 105, 155, 210, 270])
     gfs_cases = np.array([1000, 960, 930, 900, 870, 780, 620, 420])
 
-    # ECMWF
+
     ecmwf_error = np.array([0, 20, 35, 52, 68, 98, 135, 175])
     ecmwf_cases = np.array([1000, 970, 945, 920, 895, 810, 680, 520])
 
-    # HWRF
+
     hwrf_error = np.array([0, 24, 42, 65, 88, 130, 175, 220])
     hwrf_cases = np.array([800, 760, 720, 680, 640, 540, 380, 220])
 
-    # UKMET
+
     ukmet_error = np.array([0, 26, 48, 72, 96, 142, 190, 240])
     ukmet_cases = np.array([1000, 950, 910, 870, 830, 710, 550, 360])
 
-    # Climatology
+
     climo_error = np.array([0, 35, 68, 105, 145, 215, 290, 360])
     climo_cases = np.array([1000, 980, 960, 940, 920, 880, 820, 750])
 
@@ -252,7 +242,7 @@ def create_track_verification_plot(output_dir='.', filename='track_verification.
     fig = plt.figure(figsize=(18, 10))
     gs = fig.add_gridspec(2, 2, height_ratios=[3, 1], hspace=0.35, wspace=0.35)
 
-    # Main plot
+
     ax_main = fig.add_subplot(gs[0, :])
 
     models = [
@@ -371,20 +361,11 @@ def create_track_verification_plot(output_dir='.', filename='track_verification.
     return filepath
 
 
-# ============================================================================
-# NEW: STREAM FUNCTION PLOTS
-# ============================================================================
+
 
 def create_streamfunction_plot(engine_ref, output_dir='.',
                                style='jfm', filename=None):
-    """
-    Create publication-quality stream function plots.
 
-    Args:
-        engine_ref: PhysicsEngine instance
-        style: 'jfm' (3-panel) or 'minimal' (single panel)
-        filename: Output filename (auto-generated if None)
-    """
     if engine_ref is None:
         print("Warning: No engine provided for stream function plot")
         return None
@@ -570,18 +551,13 @@ def _create_minimal_streamfunction(engine_ref, output_dir, filename):
     return filepath
 
 
-# ============================================================================
-# ORIGINAL FUNCTIONS (UPDATED)
-# ============================================================================
+
 
 def plot_static_field(lat_grid, lon_grid, speed_field, filename="hurricane_frame.png",
                       engine_ref=None, track_history=None, time_hours=None,
                       show_streamfunction=True, show_model_comparison=True,
                       show_moist_diagnostics=True, output_dir='.'):
-    """
-    Create comprehensive hurricane analysis plot with multiple panels.
-    Also generates separate publication-quality figures.
-    """
+
     # Create main comprehensive plot
     fig = plt.figure(figsize=(24, 16), facecolor='white')
     gs = fig.add_gridspec(2, 3, width_ratios=[2, 1, 1], height_ratios=[1, 1],
@@ -591,7 +567,6 @@ def plot_static_field(lat_grid, lon_grid, speed_field, filename="hurricane_frame
     center_lat = np.mean(lat_grid)
     center_lon = np.mean(lon_grid)
 
-    # Use PlateCarree for more reliable projections (avoids cartopy errors)
     proj = ccrs.PlateCarree()
 
     # Main panel
@@ -606,7 +581,7 @@ def plot_static_field(lat_grid, lon_grid, speed_field, filename="hurricane_frame
     ]
     ax_main.set_extent(extent, crs=data_crs)
 
-    # Map features - wrap in try-except to handle projection issues
+
     try:
         ax_main.add_feature(cfeature.LAND, facecolor='#F5F5DC', zorder=1)
         ax_main.add_feature(cfeature.OCEAN, facecolor='#E6F2FF', zorder=0)
@@ -923,7 +898,7 @@ def plot_static_field(lat_grid, lon_grid, speed_field, filename="hurricane_frame
     plt.close()
     print(f"Saved comprehensive analysis: {filepath}")
 
-    # Generate separate publication figures
+    # Generate separate figures
     if engine_ref is not None:
         # Stream function plots
         if show_streamfunction:
@@ -932,7 +907,7 @@ def plot_static_field(lat_grid, lon_grid, speed_field, filename="hurricane_frame
             create_streamfunction_plot(engine_ref, output_dir, style='minimal',
                                        filename='streamfunction_minimal.png')
 
-    # Track verification (once per run)
+    # Track verification
     import os
     create_track_verification_plot(output_dir, 'track_verification.png')
 
@@ -953,7 +928,7 @@ def create_video(lon_grid, lat_grid, speed_stack, track, out_file="hurricane.mp4
         center_lat = np.mean(lat_grid)
         center_lon = np.mean(lon_grid)
 
-        # Use PlateCarree for more reliable projections
+
         proj = ccrs.PlateCarree()
 
         ax = fig.add_subplot(1, 1, 1, projection=proj)
@@ -967,7 +942,7 @@ def create_video(lon_grid, lat_grid, speed_stack, track, out_file="hurricane.mp4
         ]
         ax.set_extent(extent, crs=data_crs)
 
-        # Map features - with error handling
+
         try:
             ax.add_feature(cfeature.LAND, facecolor='#F5F5DC', zorder=1)
             ax.add_feature(cfeature.OCEAN, facecolor='#E6F2FF', zorder=0)

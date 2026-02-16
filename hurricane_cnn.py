@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
 
 
-# Step 1: Download and parse HURDAT2 data
+# Download and parse HURDAT2 data
 class HURDAT2Loader:
 
 
@@ -50,7 +50,7 @@ class HURDAT2Loader:
         return val
 
 
-# Step 2: Create training dataset
+# Create training dataset
 class HurricaneDataset(Dataset):
 
 
@@ -104,7 +104,7 @@ def train_cnn_on_historical_data():
     """Complete training pipeline."""
 
     print("=" * 70)
-    print("TRAINING CNN ON HURDAT2 HISTORICAL DATA")
+    print("Training CNN on HURDAT2 database")
     print("=" * 70)
 
     # Load data

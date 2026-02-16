@@ -138,7 +138,7 @@ class PhysicsEngine:
         self.u_bg = None
         self.v_bg = None
 
-    # V enc
+
 
     def compute_environmental_steering(self, lat_deg, lon_deg=None):
 
@@ -149,7 +149,7 @@ class PhysicsEngine:
         R_EARTH = 6.371e6
 
 
-        # 1) ZONAL MEAN FLOW(ZMF) (m/s)
+        #ZONAL MEAN FLOW(m/s)
 
 
         abs_lat = abs(lat)
@@ -176,7 +176,7 @@ class PhysicsEngine:
             v_mean = 3.5 * np.sin(lat_rad)
 
 
-        # BETA-PLANE DRIFT (m/s) Causes northwestward drift and recurvature
+        # BETA-PLANE DRIFT (m/s) Causes northwestward drift and recurvature in northern hemisphere
 
         beta = 2.0 * OMEGA * np.cos(lat_rad) / R_EARTH
 
@@ -187,7 +187,7 @@ class PhysicsEngine:
         v_beta = 0.10 * beta * L * L * np.sign(lat)
 
 
-        # SYNOPTIC-SCALE MODULATION (Rossby waves in theory), back up case if CNN doesnt work
+        # (Rossby waves in theory), back up case if CNN doesnt work
 
         if lon_deg is not None:
             lon_rad = np.deg2rad(float(lon_deg))
@@ -325,12 +325,7 @@ class PhysicsEngine:
         self.v = -grad_x(self.psi, self.dx)
 
     def _zeta_tendency(self, zeta, u, v):
-        """
-        Main stuff
-        - Advection: -(u·∇)ζ
-        - Diffusion: ν∇²ζ
-        - ENERGY SOURCE: Latent heat release (diabatic heating)
-                """
+
         dzdx = grad_x(zeta, self.dx)
         dzdy = grad_y(zeta, self.dy)
 

@@ -26,7 +26,7 @@ def divergence(u, v, dx, dy):
 
 
 def curl(u, v, dx, dy):
-    """Compute curl (vorticity)"""
+    """Compute curl"""
     return grad_x(v, dx) - grad_y(u, dy)
 
 
@@ -71,11 +71,11 @@ def solve_navier_stokes_step(u, v, p, rho, nu, dx, dy, dt, forcing_u=None, forci
     ∂v/∂t + (u·∇)v = -1/ρ ∇p + ν∇²v + f_v
     ∇·u = 0 (incompressibility)
 """
-    # Advection terms (nonlinear): (u·∇)u and (u·∇)v
+    # Advection terms:
     u_adv = u * grad_x(u, dx) + v * grad_y(u, dy)
     v_adv = u * grad_x(v, dx) + v * grad_y(v, dy)
 
-    # Diffusion terms: ν∇²u and ν∇²v
+    # Diffusion terms:
     u_diff = nu * laplacian(u, dx, dy)
     v_diff = nu * laplacian(v, dx, dy)
 
@@ -92,7 +92,6 @@ def solve_navier_stokes_step(u, v, p, rho, nu, dx, dy, dt, forcing_u=None, forci
     v_star = v + dt * (-v_adv + v_diff - p_grad_y + f_v)
 
     # Solve for pressure correction using Poisson equation
-    # ∇²p = ρ/dt ∇·u*
     div_u_star = divergence(u_star, v_star, dx, dy)
     p_correction = poisson_solve_fft(rho * div_u_star / dt, dx, dy)
 
@@ -132,6 +131,6 @@ def decompose_velocity_components(u_total, v_total, methods=['vortical', 'diverg
     }
 
 
-    # u = ∇×ψ + ∇φ
+
 
     return components
